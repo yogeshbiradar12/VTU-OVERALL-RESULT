@@ -1,0 +1,581 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>VTU Student Portal | Special Surprise</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,sans-serif;background:#f2f5fa;color:#18283e;min-height:100vh}
+button,input{font-family:inherit}
+.hidden{display:none!important}
+
+/* ===== VTU INSPIRED PORTAL ===== */
+
+.header{
+ background:#073b70;color:white;padding:17px 7%;
+ display:flex;align-items:center;gap:15px;
+ box-shadow:0 4px 15px #12345620
+}
+.emblem{
+ width:49px;height:49px;border:2px solid #e7c16c;
+ border-radius:50%;display:grid;place-items:center;
+ font-size:25px;color:#ffdf91
+}
+.header h2{font-size:18px}
+.header p{font-size:10px;color:#c4d7ed;margin-top:5px;letter-spacing:1px}
+.strip{background:#e6bd61;color:#243a52;text-align:center;padding:8px;font-size:10px;font-weight:800;letter-spacing:1px}
+
+.container{width:min(720px,92%);margin:55px auto}
+.breadcrumb{font-size:12px;color:#7a8da7;margin-bottom:20px}
+.result-card{
+ background:white;border:1px solid #e1e8f1;border-radius:14px;
+ overflow:hidden;box-shadow:0 15px 50px #1b426310
+}
+.card-heading{padding:25px;background:#f8faff;border-bottom:1px solid #e7edf5}
+.card-heading h1{font-size:21px;color:#123e70}
+.card-heading p{font-size:12px;color:#8493a7;margin-top:8px}
+.tabs{display:flex;gap:25px;margin-top:20px;font-size:12px;font-weight:700}
+.tabs span{padding-bottom:10px;color:#8796a9}
+.tabs .selected{color:#07549a;border-bottom:3px solid #07549a}
+.form{padding:30px}
+.form label{font-size:12px;font-weight:800;color:#304966;display:block;margin-bottom:12px}
+.form input{
+ width:100%;height:53px;padding:0 16px;
+ border:1px solid #ccd7e5;border-radius:8px;
+ outline:none;font-size:16px;font-weight:600;letter-spacing:1px;
+ text-transform:uppercase;color:#173a60
+}
+.form input:focus{border-color:#287bd0;box-shadow:0 0 0 4px #287bd018}
+.helper{font-size:11px;color:#8797a9;margin-top:9px}
+.check{
+ width:100%;margin-top:23px;padding:16px;
+ border:0;border-radius:8px;background:#07549a;color:white;
+ font-size:13px;font-weight:800;cursor:pointer;transition:.25s
+}
+.check:hover{background:#063c70;transform:translateY(-2px)}
+.error{color:#d33c4e;font-size:12px;margin-top:12px;min-height:15px}
+.info{margin-top:23px;padding:16px;background:#f0f6fd;border-radius:8px;color:#71849d;font-size:11px;line-height:1.8}
+.info strong{color:#35516f}
+.footer{text-align:center;color:#8b9aab;font-size:11px;margin-top:25px;line-height:2}
+.loading{display:none;text-align:center;padding:55px 15px}
+.spinner{
+ width:48px;height:48px;border-radius:50%;
+ border:4px solid #dce8f5;border-top-color:#07549a;
+ margin:0 auto 20px;animation:spin .8s linear infinite
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading p{font-size:12px;color:#8292a7;margin-top:12px}
+
+/* ===== TRANSITION ===== */
+
+#transition{
+ position:fixed;inset:0;background:#080c1c;color:white;
+ z-index:50;display:grid;place-items:center;text-align:center;
+ opacity:0;pointer-events:none;transition:opacity 1s
+}
+#transition.active{opacity:1}
+.transition-content{padding:25px}
+.transition-content h2{font-size:clamp(25px,6vw,42px);color:#ffdc8e}
+.transition-content p{color:#d9c5e9;margin-top:14px;font-size:13px}
+
+/* ===== BIRTHDAY WORLD ===== */
+
+#birthday{
+ display:none;min-height:100vh;position:relative;
+ overflow:hidden;padding:65px 18px 45px;
+ background:
+ radial-gradient(ellipse at 50% 0%,#633071 0%,transparent 45%),
+ radial-gradient(ellipse at bottom,#38204f,#130b23 65%,#080611);
+ color:white
+}
+#birthday.show{display:block;animation:pageIn 1.4s ease both}
+@keyframes pageIn{from{opacity:0;filter:blur(12px)}to{opacity:1;filter:blur(0)}}
+
+.ambient{
+ position:fixed;width:350px;height:350px;border-radius:50%;
+ filter:blur(100px);background:#a83eff30;
+ pointer-events:none
+}
+.ambient.one{top:10%;left:-150px}
+.ambient.two{bottom:0;right:-130px;background:#ffb53d20}
+
+.birthday-wrap{
+ max-width:740px;margin:auto;position:relative;z-index:2;text-align:center
+}
+.kicker{font-size:11px;letter-spacing:5px;color:#e7bdff}
+.birthday-wrap h1{
+ font-family:'Playfair Display',serif;
+ font-size:clamp(43px,9vw,78px);
+ color:#ffdc91;margin:23px 0 7px;
+ text-shadow:0 0 18px #ffb64a,0 0 45px #bd65ff70
+}
+.name{font-size:clamp(25px,6vw,42px);color:#e3acff;text-shadow:0 0 25px #ba56ff}
+.subtitle{color:#e4d3ef;font-size:13px;line-height:1.9;margin-top:17px}
+
+/* ===== COMPLETE 3D GIFT BOX ===== */
+
+.gift-stage{
+ height:300px;display:flex;justify-content:center;align-items:center;
+ perspective:1100px;position:relative;margin:8px auto 0
+}
+.gift-shadow{
+ position:absolute;bottom:43px;width:200px;height:28px;
+ background:#0008;filter:blur(17px);border-radius:50%;
+ transform:rotateX(65deg)
+}
+.gift{
+ width:180px;height:170px;position:relative;
+ transform-style:preserve-3d;
+ transform:rotateX(-7deg) rotateY(-12deg);
+ cursor:pointer;
+ animation:giftFloat 3s ease-in-out infinite;
+ transition:transform .8s;
+}
+@keyframes giftFloat{
+ 0%,100%{transform:translateY(0) rotateX(-7deg) rotateY(-12deg)}
+ 50%{transform:translateY(-12px) rotateX(-5deg) rotateY(5deg)}
+}
+
+/* Main box body */
+.box-body{
+ position:absolute;left:15px;top:65px;
+ width:150px;height:105px;
+ background:linear-gradient(145deg,#b14ed4,#7624aa 65%,#45146d);
+ border:2px solid #f8c96f;
+ box-shadow:inset -12px -10px 20px #35104b66,0 12px 25px #0005;
+ transform-style:preserve-3d;
+}
+
+/* Right side depth */
+.box-body:after{
+ content:"";position:absolute;left:100%;top:-2px;
+ width:25px;height:105px;
+ background:linear-gradient(90deg,#592080,#35104d);
+ border:2px solid #d99b49;
+ border-left:0;
+ transform:skewY(-32deg);
+ transform-origin:left top;
+}
+
+/* Front golden vertical ribbon */
+.front-ribbon{
+ position:absolute;z-index:3;
+ left:78px;top:65px;width:25px;height:105px;
+ background:linear-gradient(90deg,#a96c20,#ffe9a5,#d69a3d);
+ box-shadow:0 0 10px #ffc96a55
+}
+
+/* Lid */
+.gift-lid{
+ position:absolute;z-index:5;
+ left:5px;top:52px;width:170px;height:29px;
+ background:linear-gradient(180deg,#ffdb91,#b77a2c);
+ border:2px solid #ffe5a4;
+ border-radius:4px;
+ box-shadow:0 4px 12px #0005;
+ transform-origin:10px 25px;
+ transition:transform 1.2s cubic-bezier(.2,.8,.2,1);
+}
+.gift-lid:after{
+ content:"";position:absolute;left:100%;top:0;
+ width:22px;height:29px;background:#b17a35;
+ transform:skewY(-28deg);transform-origin:left top;
+ border:1px solid #f8d48a
+}
+
+/* Lid ribbon */
+.lid-ribbon{
+ position:absolute;z-index:6;
+ left:78px;top:52px;width:25px;height:29px;
+ background:linear-gradient(90deg,#a96c20,#fff0ba,#ce9337)
+}
+
+/* Decorative stars */
+.gift-star{
+ position:absolute;z-index:4;color:#ffdf90;font-size:18px
+}
+.star1{left:35px;top:110px}
+.star2{left:128px;top:130px}
+.star3{left:44px;top:145px;font-size:12px}
+
+/* Complete bow */
+.bow{
+ position:absolute;z-index:8;top:15px;left:61px;
+ width:65px;height:48px;
+}
+.bow:before,.bow:after{
+ content:"";position:absolute;width:37px;height:28px;
+ border:8px solid #f5ca77;
+ background:linear-gradient(135deg,#fff0b0,#d99a3c);
+ border-radius:50% 50% 10% 50%;
+ box-shadow:0 2px 10px #0005
+}
+.bow:before{left:-2px;top:5px;transform:rotate(28deg)}
+.bow:after{right:-2px;top:5px;transform:scaleX(-1) rotate(28deg)}
+.bow-knot{
+ position:absolute;z-index:2;left:24px;top:15px;
+ width:20px;height:19px;border-radius:50%;
+ background:radial-gradient(circle at 30% 25%,#fff1b8,#bd7c25);
+ box-shadow:0 0 12px #ffd36b
+}
+.bow-tail{
+ position:absolute;top:30px;left:27px;
+ width:11px;height:34px;background:linear-gradient(90deg,#c0832e,#ffe8a0);
+ transform:rotate(16deg);z-index:-1
+}
+
+/* Open animation */
+.gift.open{animation:none;transform:translateY(12px) rotateY(0deg) scale(1.1)}
+.gift.open .gift-lid{transform:translateY(-100px) rotate(-32deg)}
+.gift.open .bow{transform:translateY(-90px) rotate(-25deg);transition:1s}
+.gift.open .box-body{box-shadow:0 0 40px #ffcf6d88,inset -12px -10px 20px #35104b66}
+
+.open-btn{
+ border:1px solid #ffe2a0;border-radius:40px;
+ background:linear-gradient(110deg,#a76a20,#ffe1a0,#ae7229);
+ color:#321b32;padding:17px 32px;
+ font-weight:800;font-size:13px;cursor:pointer;
+ box-shadow:0 0 28px #ffcf7280;
+ transition:.3s
+}
+.open-btn:hover{transform:scale(1.06);box-shadow:0 0 38px #ffd36a}
+
+.wish{
+ display:none;max-width:630px;margin:40px auto 0;
+ padding:32px 25px;border:1px solid #d9a5ff77;
+ border-radius:23px;
+ background:linear-gradient(145deg,#40214fe8,#1b1028f5);
+ box-shadow:0 0 55px #b24aff24,0 20px 60px #0006;
+ backdrop-filter:blur(20px);
+ line-height:2;
+}
+.wish.reveal{display:block;animation:reveal 1.2s ease both}
+@keyframes reveal{
+ from{opacity:0;transform:translateY(35px) scale(.97)}
+ to{opacity:1;transform:translateY(0) scale(1)}
+}
+.wish h2{font-family:'Playfair Display',serif;color:#ffdc93;font-size:27px;margin-bottom:18px}
+.wish p{font-size:14px;color:#f2e7f7}
+.signature{color:#e1a8ff;margin-top:23px;font-style:italic}
+.final-wish{font-size:20px;color:#ffdc91;margin-top:23px}
+.small-footer{font-size:10px;color:#c4a2d4;letter-spacing:3px;margin-top:38px}
+
+/* PARTICLES */
+#particles{position:fixed;inset:0;pointer-events:none;z-index:15}
+.balloon{
+ position:fixed;bottom:-90px;font-size:37px;
+ animation:rise linear forwards;z-index:1;pointer-events:none
+}
+@keyframes rise{to{transform:translateY(-120vh) rotate(35deg);opacity:0}}
+.confetti{
+ position:fixed;top:-20px;z-index:30;pointer-events:none;
+ animation:fall linear forwards
+}
+@keyframes fall{to{transform:translateY(110vh) rotate(900deg)}}
+
+@media(max-width:600px){
+ .container{margin:32px auto}
+ .header{padding:14px 5%}
+ .form{padding:22px}
+ #birthday{padding:45px 15px}
+ .gift-stage{height:265px}
+ .wish{padding:25px 18px}
+ .wish p{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){
+ *,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+
+<body>
+
+<!-- RESULT PORTAL -->
+<div id="portal">
+ <div class="strip">UNIVERSITY EXAMINATION SERVICES • STUDENT PORTAL DEMO</div>
+
+ <header class="header">
+  <div class="emblem">🎓</div>
+  <div>
+   <h2>University Results Portal</h2>
+   <p>VTU-INSPIRED OVERALL RESULT & CGPA INTERFACE</p>
+  </div>
+ </header>
+
+ <main class="container">
+  <div class="breadcrumb">Home / Examination / Overall Results</div>
+
+  <section class="result-card">
+   <div class="card-heading">
+    <h1>Overall Results & CGPA Calculator</h1>
+    <p>University Seat Number verification</p>
+    <div class="tabs">
+     <span class="selected">OVERALL RESULT</span>
+     <span>CGPA CALCULATOR</span>
+    </div>
+   </div>
+
+   <div class="form" id="entry">
+    <label for="usn">UNIVERSITY SEAT NUMBER (USN)</label>
+    <input id="usn" maxlength="12" placeholder="Enter your USN" autocomplete="off">
+    <div class="helper">Example: 3LA23CS000</div>
+
+    <button class="check" onclick="checkResult()">CHECK OVERALL RESULT →</button>
+    <div class="error" id="error"></div>
+
+    <div class="info">
+     <strong>Examination Notice</strong><br>
+     Enter your University Seat Number to continue.
+     This is an unofficial birthday experience, not a live VTU result service.
+    </div>
+   </div>
+
+   <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <h3>Processing Student Details...</h3>
+    <p>Verifying student information...</p>
+   </div>
+  </section>
+
+  <div class="footer">
+   UNIVERSITY RESULTS INTERFACE DEMO<br>
+   Academic Experience • 2026–27
+  </div>
+ </main>
+</div>
+
+<!-- TRANSITION -->
+<div id="transition">
+ <div class="transition-content">
+  <h2>Wait... Something Special! ✨</h2>
+  <p>Not every result is measured in marks. ❤️</p>
+ </div>
+</div>
+
+<!-- BIRTHDAY EXPERIENCE -->
+<section id="birthday">
+ <div class="ambient one"></div>
+ <div class="ambient two"></div>
+ <canvas id="particles"></canvas>
+
+ <div class="birthday-wrap">
+  <div class="kicker">✦ A SECRET MESSAGE FOR A SPECIAL FRIEND ✦</div>
+
+  <h1>Happy Birthday!</h1>
+  <div class="name">Tauz Ul Imam ❤️</div>
+
+  <p class="subtitle">
+   Your academic journey is important...<br>
+   But today, there's one result you must see!<br>
+   <strong style="color:#ffdc91">100% AWESOME FRIEND!</strong>
+  </p>
+
+  <div class="gift-stage">
+   <div class="gift-shadow"></div>
+
+   <div class="gift" id="gift" onclick="openGift()">
+    <div class="gift-body"></div>
+    <div class="front-ribbon"></div>
+    <div class="gift-star star1">✦</div>
+    <div class="gift-star star2">✧</div>
+    <div class="gift-star star3">✦</div>
+    <div class="gift-lid"></div>
+    <div class="lid-ribbon"></div>
+    <div class="bow">
+     <div class="bow-knot"></div>
+     <div class="bow-tail"></div>
+    </div>
+   </div>
+  </div>
+
+  <button class="open-btn" id="openBtn" onclick="openGift()">
+   🎁 OPEN YOUR SPECIAL GIFT
+  </button>
+
+  <div class="wish" id="wish">
+   <h2>Dear Tauz Ul Imam! 🎂</h2>
+   <p>
+    Happy Birthday, brother! 🥳❤️
+    <br><br>
+    On your special day, we just want to remind you
+    how amazing you are!
+    <br><br>
+    May this new chapter of your life be filled
+    with happiness, success, good health and
+    endless opportunities.
+    <br><br>
+    Keep smiling, keep growing, and never stop
+    chasing your dreams.
+    <br><br>
+    May you achieve everything you work hard for
+    and create countless unforgettable memories.
+    <br><br>
+    College life gives us assignments, exams,
+    backlogs and deadlines... but friendship gives us
+    memories that last forever! 😂❤️
+    <br><br>
+    Enjoy your day, brother. You deserve all
+    the happiness in the world!
+   </p>
+
+   <div class="signature">
+    With lots of love and friendship ❤️<br>
+    — Your Friends
+   </div>
+
+   <div class="final-wish">🎉 Stay Happy. Stay Blessed. 🎉</div>
+  </div>
+
+  <div class="small-footer">MADE WITH ❤️ FOR TAUZ UL IMAM</div>
+ </div>
+</section>
+
+<script>
+const TARGET_USN="3LA23CS110";
+let giftOpened=false;
+
+function checkResult(){
+ const input=document.getElementById("usn");
+ const error=document.getElementById("error");
+ const value=input.value.trim().toUpperCase();
+
+ if(!value){
+  error.textContent="Please enter your USN.";
+  input.focus();
+  return;
+ }
+
+ if(value!==TARGET_USN){
+  error.textContent="Invalid USN. Please verify and try again.";
+  input.value="";
+  input.focus();
+  return;
+ }
+
+ error.textContent="";
+ document.getElementById("entry").style.display="none";
+ document.getElementById("loading").style.display="block";
+
+ setTimeout(()=>{
+  document.getElementById("transition").classList.add("active");
+
+  setTimeout(()=>{
+   document.getElementById("portal").style.display="none";
+   document.getElementById("birthday").classList.add("show");
+   document.getElementById("transition").classList.remove("active");
+
+   for(let i=0;i<14;i++){
+    setTimeout(createBalloon,i*300);
+   }
+  },1300);
+ },2200);
+}
+
+document.getElementById("usn").addEventListener("keydown",e=>{
+ if(e.key==="Enter")checkResult();
+});
+
+function openGift(){
+ if(giftOpened)return;
+ giftOpened=true;
+
+ document.getElementById("gift").classList.add("open");
+ document.getElementById("openBtn").style.display="none";
+
+ setTimeout(()=>{
+  document.getElementById("wish").classList.add("reveal");
+  document.getElementById("wish").scrollIntoView({
+   behavior:"smooth",block:"center"
+  });
+  fireworks();
+  confetti();
+ },1000);
+}
+
+function createBalloon(){
+ const b=document.createElement("div");
+ b.className="balloon";
+ b.textContent=["🎈","💜","✨","🎊","💛"][Math.floor(Math.random()*5)];
+ b.style.left=Math.random()*100+"vw";
+ b.style.animationDuration=(9+Math.random()*7)+"s";
+ document.body.appendChild(b);
+ setTimeout(()=>b.remove(),17000);
+}
+
+function confetti(){
+ const colors=["#ffd166","#e6a3ff","#ff70b7","#fff","#a8f0dc"];
+ for(let i=0;i<160;i++){
+  const c=document.createElement("div");
+  c.className="confetti";
+  c.style.left=Math.random()*100+"vw";
+  c.style.background=colors[Math.floor(Math.random()*colors.length)];
+  c.style.width=(5+Math.random()*7)+"px";
+  c.style.height=(8+Math.random()*9)+"px";
+  c.style.animationDuration=(3+Math.random()*4)+"s";
+  document.body.appendChild(c);
+  setTimeout(()=>c.remove(),8000);
+ }
+}
+
+/* FIREWORKS */
+const canvas=document.getElementById("particles");
+const ctx=canvas.getContext("2d");
+let particles=[];
+
+function resize(){
+ canvas.width=window.innerWidth;
+ canvas.height=window.innerHeight;
+}
+resize();
+window.addEventListener("resize",resize);
+
+function fireworks(){
+ for(let k=0;k<12;k++){
+  setTimeout(()=>{
+   const x=Math.random()*canvas.width;
+   const y=Math.random()*canvas.height*.55;
+
+   for(let i=0;i<65;i++){
+    const angle=Math.random()*Math.PI*2;
+    const speed=1+Math.random()*5;
+    particles.push({
+     x,y,
+     vx:Math.cos(angle)*speed,
+     vy:Math.sin(angle)*speed,
+     life:100,
+     color:["#ffd166","#d58aff","#ff75ba","#fff"][k%4]
+    });
+   }
+  },k*350);
+ }
+}
+
+function animate(){
+ ctx.clearRect(0,0,canvas.width,canvas.height);
+ particles=particles.filter(p=>p.life>0);
+
+ particles.forEach(p=>{
+  ctx.globalAlpha=p.life/100;
+  ctx.fillStyle=p.color;
+  ctx.beginPath();
+  ctx.arc(p.x,p.y,3,0,Math.PI*2);
+  ctx.fill();
+  p.x+=p.vx;
+  p.y+=p.vy;
+  p.vy+=.035;
+  p.life--;
+ });
+
+ ctx.globalAlpha=1;
+ requestAnimationFrame(animate);
+}
+animate();
+</script>
+
+</body>
+</html>
